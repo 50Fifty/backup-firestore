@@ -1,0 +1,22 @@
+name: Backup Firestore
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 16 * * *' # Runs at midnight in GMT+8. See https://crontab.guru/
+  
+
+env:
+  PROJECT_ID: <Enter your project id here>
+  BUCKET: gs://<Enter Google Cloud bucket id here>
+
+jobs:
+  backup_firestore:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: google-github-actions/auth@v0.5.0
+      with:
+        credentials_json: ${{ secrets.<Enter your secrets filename here> }}
+    - run: gcloud info
+    - run: gcloud config set project $PROJECT_ID
+    - run: gcloud firestore export $BUCKET
